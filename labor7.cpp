@@ -115,6 +115,36 @@ void DFS(int *vis, int** G, int size){
 	}
 }
 
+void checkVisNR(int s, int *vis, int** G, int size){
+	int flag = 1;
+	vis[s] = 1;
+	printf("%d ", s);
+	while(flag>0){
+		for(int i = 0;i<size;i++){
+			if(vis[i]==1){
+				for(int j = 0;j<size;j++){
+					if(G[i][j]==1 && vis[j]==0){
+						vis[j] = 1;
+						printf("%d ", j);
+						flag++;
+					}
+				}
+				flag--;
+			}
+		}
+	}
+}
+
+
+void DFSNR(int *vis, int** G, int size){
+	for(int i = 0;i<size;i++){
+		if(vis[i]==0){
+			checkVisNR(i, vis, G, size);
+			printf("\n");
+		}
+	}
+}
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -132,11 +162,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printG(G, nG);
 
-	node** A = createAdj(G, nG);
+	//node** A = createAdj(G, nG);
 
-	printAdj(A, nG);
+	//printAdj(A, nG);
 
-	DFSA(vis, A, nG);
+	DFSNR(vis, G, nG);
 	//DFS(vis, G, nG);
 
 	getchar();
