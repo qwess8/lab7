@@ -6,6 +6,69 @@
 #include <random>
 #include <time.h>
 
+
+typedef struct node {
+    int n;
+    struct node* next;
+} node;
+
+node** createAdj(int** G, int n) {
+    node** A = (node**)malloc(n * sizeof(node*));
+    for (int i = 0; i < n; ++i) {
+        A[i] = NULL;
+        node* tail = NULL; 
+        for (int j = 0; j < n; ++j) {
+            if (G[i][j] == 1) {
+                node* newNode = (node*)malloc(sizeof(node));
+                newNode->n = j;
+                newNode->next = NULL;
+                if (tail == NULL) {
+                    A[i] = newNode;
+                }
+                else {
+                    tail->next = newNode; 
+                }
+                tail = newNode; 
+            }
+        }
+    }
+    return A;
+}
+
+void printAdj(node** A, int n) {
+    for (int i = 0; i < n; ++i) {
+        printf("%d: ", i);
+        node* current = A[i];
+        while (current != NULL) {
+            printf("%d ", current->n);
+            current = current->next;
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void checkVisA(int s, int *vis, node** A, int size){
+	vis[s] = 1;
+	printf("%d ", s);
+	node* current = A[s];
+	while(current!= NULL){
+		if(vis[current->n] == 0){
+			checkVisA(current->n, vis, A, size);
+		}
+		current = current->next;
+	}
+}
+
+void DFSA(int *vis, node** A, int size){
+	for(int i = 0;i<size;i++){
+		if(vis[i]==0){
+			checkVisA(i, vis, A, size);
+			printf("\n");
+		}
+	}
+}
+
 int **createG(int size){
 	int **G;
 	G = (int**)malloc(size * sizeof(int*));
@@ -69,7 +132,12 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printG(G, nG);
 
-	DFS(vis, G, nG);
+	node** A = createAdj(G, nG);
+
+	printAdj(A, nG);
+
+	DFSA(vis, A, nG);
+	//DFS(vis, G, nG);
 
 	getchar();
 	getchar();
